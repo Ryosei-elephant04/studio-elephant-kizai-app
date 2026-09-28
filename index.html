@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ja"><head><base target="_top"><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --fm:"Noto Sans JP",-apple-system,"Hiragino Kaku Gothic ProN","Meiryo UI","Meiryo","メイリオ",sans-serif;
+  --fn:"Poppins","Noto Sans JP",sans-serif;
+  --ink:#1C1F23; --ink2:#5C636B; --ink3:#8A9098;
+  --line:#E4E3DF; --line2:#EFEEEA;
+  --bg:#F6F6F3; --card:#FFFFFF;
+  --brand:#232323; --brand2:#141414; --brand-soft:#EFEEEA;
+  --gold:#F2D544; --gold-d:#E0C22E;
+  --pos:#2E6B3F; --pos-soft:#EBF3EC;
+  --wrn:#8A6412; --wrn-soft:#FBF3E2;
+  --dng:#9E3229; --dng-soft:#FBEEEC;
+  --r:8px;
+}
+body{font-family:var(--fm);background:var(--bg);color:var(--ink);font-size:13px;line-height:1.6;
+-webkit-font-smoothing:antialiased}
+.num{font-family:var(--fn);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+/* ---------- レイアウト ---------- */
+.shell{display:flex;min-height:100vh}
+.side{width:212px;flex-shrink:0;background:var(--brand);color:#fff;position:fixed;top:0;bottom:0;
+display:flex;flex-direction:column}
+.brandbadge{margin:16px 16px 2px;display:inline-flex;background:var(--gold);color:#232323;
+font-family:var(--fn);font-size:10px;font-weight:700;letter-spacing:.04em;padding:5px 10px;
+transform:rotate(-3deg);box-shadow:2px 2px 0 rgba(0,0,0,.3);width:fit-content}
+.brand{padding:10px 18px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand .n1{font-size:11px;letter-spacing:.14em;opacity:.55;font-family:var(--fn)}
+.brand .n2{font-size:14px;font-weight:700;margin-top:3px;letter-spacing:.02em}
+.menu{padding:10px 10px;flex:1}
+.mi{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border:none;border-radius:6px;
+background:none;color:rgba(255,255,255,.72);cursor:pointer;font-family:var(--fm);font-size:12.5px;
+text-align:left;margin-bottom:2px;transition:background .13s,color .13s}
+.mi:hover{background:rgba(255,255,255,.08);color:#fff}
+.mi.on{background:var(--gold);color:#232323;font-weight:700}
+.mi svg{width:16px;height:16px;flex-shrink:0;opacity:.9}
+.main{margin-left:212px;flex:1;min-width:0}
+.hd{background:rgba(246,246,243,.9);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
+padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;
+position:sticky;top:0;z-index:50}
+.hd h1{font-size:17px;font-weight:700;letter-spacing:.01em}
+.hd .r{display:flex;align-items:center;gap:10px}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;background:#EDEDE9;color:var(--ink2)}
+.pill.ok{background:var(--pos-soft);color:var(--pos)}
+.pill.er{background:var(--dng-soft);color:var(--dng)}
+.body{padding:22px 28px 70px;max-width:1280px}
+.page{display:none}.page.on{display:block}
+/* ---------- 部品 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:14px}
+.card>.ch{display:flex;align-items:center;justify-content:space-between;margin:-2px 0 12px}
+.ch h2{font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.04em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.kpi .l{font-size:11px;color:var(--ink3);letter-spacing:.03em}
+.kpi .v{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-top:2px;line-height:1.2}
+.kpi .s{font-size:10.5px;color:var(--ink3)}
+label.fl{display:block;font-size:11px;color:var(--ink2);font-weight:700;margin-bottom:4px}
+input,select,textarea{font-family:var(--fm);font-size:12.5px;border:1px solid #D5D4CF;border-radius:6px;
+background:#fff;color:var(--ink);height:34px;padding:0 9px;width:100%}
+textarea{height:auto;padding:7px 9px;resize:vertical}
+input:hover,select:hover{border-color:#B9B8B2}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(27,58,91,.10)}
+input:disabled,select:disabled{background:#F4F4F1;color:var(--ink3)}
+.fg{margin-bottom:12px}
+.btn{height:34px;padding:0 14px;border-radius:6px;border:1px solid #D5D4CF;background:#fff;color:var(--ink);
+cursor:pointer;font-size:12.5px;font-family:var(--fm);display:inline-flex;align-items:center;gap:6px;
+white-space:nowrap;transition:background .13s,border-color .13s}
+.btn:hover{background:#F4F4F1;border-color:#BDBCB6}
+.btn.p{background:var(--gold);color:#232323;border-color:var(--gold-d);font-weight:700}.btn.p:hover{background:var(--gold-d)}
+.btn.g{background:var(--pos);color:#fff;border-color:var(--pos)}.btn.g:hover{filter:brightness(.93)}
+.btn.d{background:#fff;color:var(--dng);border-color:#E0B4AF}.btn.d:hover{background:var(--dng-soft)}
+.btn.s{height:27px;padding:0 9px;font-size:11px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.pg-on{background:var(--brand);color:#fff;border-color:var(--brand)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;padding:9px 10px;font-size:11px;font-weight:700;color:var(--ink3);
+border-bottom:1px solid var(--line);white-space:nowrap;letter-spacing:.03em}
+td{padding:9px 10px;border-bottom:1px solid var(--line2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#FAFAF7}
+.tg{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:700}
+.t映像{background:#E7EFF7;color:#2B5D8A}.t音響{background:#E9F1E8;color:#3E6B3B}
+.t照明{background:#F6EFDD;color:#8A6A1F}.tその他{background:#EDECE9;color:#5F5E5A}
+.tA{background:#E9F0F7;color:#2B5D8A;border:1px solid #CFE0EE}
+.tB{background:#ECF2E9;color:#3E6B3B;border:1px solid #D5E5CF}
+.tC{background:#F5F0E8;color:#8A6412;border:1px solid #E8DCC4}
+.ok{color:var(--pos);font-weight:700}.lw{color:var(--wrn);font-weight:700}.no{color:var(--dng);font-weight:700}
+.mut{color:var(--ink3)}
+.seg{display:inline-flex;background:#EDECE8;border-radius:6px;padding:2px}
+.seg button{border:none;background:none;padding:5px 12px;border-radius:5px;cursor:pointer;
+font-size:11.5px;font-family:var(--fm);color:var(--ink2)}
+.seg button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.07)}
+.bar{display:flex;align-items:center;gap:10px;padding:5px 0}
+.bar-n{width:158px;font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0;color:var(--ink2)}
+.bar-t{flex:1;background:#EDECE8;border-radius:99px;height:7px;overflow:hidden}
+.bar-f{height:7px;border-radius:99px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.bar-v{width:38px;text-align:right;font-size:11px;color:var(--ink2);font-weight:700}
+.ev{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line2);align-items:flex-start}
+.ev:last-child{border-bottom:none}
+.ev-t{width:42px;text-align:center;padding:2px 0;border-radius:4px;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.e入荷{background:var(--pos-soft);color:var(--pos)}
+.e出荷{background:var(--dng-soft);color:var(--dng)}
+.e見積{background:var(--brand-soft);color:var(--brand)}
+.mask{display:none;position:fixed;inset:0;background:rgba(20,25,32,.45);z-index:300;
+align-items:center;justify-content:center;padding:24px}
+.mask.on{display:flex}
+.dlg{background:#fff;border-radius:10px;width:520px;max-width:100%;max-height:88vh;overflow:auto;
+box-shadow:0 16px 48px rgba(0,0,0,.22)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dlg-h b{font-size:14px}
+.dlg-b{padding:18px 20px}
+.dlg-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;background:#FAFAF7;border-radius:0 0 10px 10px}
+.x{border:none;background:none;cursor:pointer;font-size:19px;color:var(--ink3);line-height:1;padding:3px 7px;border-radius:5px}
+.x:hover{background:#F0EFEC;color:var(--ink)}
+.note{background:var(--brand-soft);border:1px solid #D6E1EC;border-radius:6px;padding:9px 12px;font-size:11.5px;color:var(--brand)}
+.warn{background:var(--wrn-soft);border:1px solid #EBD9AF;border-radius:6px;padding:9px 12px;font-size:11.5px;color:var(--wrn);margin-bottom:12px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:#22262B;
+color:#fff;padding:11px 20px;border-radius:8px;font-size:12.5px;z-index:900;opacity:0;
+transition:opacity .2s,transform .2s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.ldg{text-align:center;padding:90px 20px;color:var(--ink3)}
+.rowline{display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--line2);cursor:pointer}
+.rowline:last-of-type{border-bottom:none}
+.rowline.alert{background:var(--wrn-soft);margin:0 -6px;padding:8px 6px;border-radius:5px}
+.rowline.selrow{background:#FBF3D0}
+.rowline[draggable="true"]:active{opacity:.6}
+.drg{width:14px;flex-shrink:0;color:var(--ink3);cursor:grab;font-size:12px;user-select:none}
+.selchk{width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.grphead{display:flex;align-items:center;gap:8px;margin:14px 0 4px;padding:10px 8px 8px}
+.grphead.newgrp{border:1.5px dashed var(--line);border-radius:6px;justify-content:center;margin-top:14px;padding:10px}
+.seltoolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--brand-soft);
+border:1px solid var(--line);border-radius:7px;padding:9px 12px;margin-bottom:10px;font-size:12px}
+.frow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line2)}
+.frow:last-child{border-bottom:none}
+.fval{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--line);
+border-radius:5px;padding:3px 4px 3px 9px;font-size:12px}
+.fval button{border:none;background:var(--brand);color:#fff;border-radius:4px;padding:3px 7px;
+font-size:10.5px;cursor:pointer;font-family:var(--fm)}
+.fval button:hover{background:var(--brand2)}
+.ci{height:29px;padding:0 6px;font-size:11.5px;text-align:center;width:100%}
+.res{max-height:230px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.res-i{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;
+border-bottom:1px solid var(--line2);cursor:pointer}
+.res-i:last-child{border-bottom:none}
+.res-i:hover{background:var(--brand-soft)}
+.rg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.ri{background:#FAFAF7;border:1px solid var(--line2);border-radius:6px;padding:7px 9px;display:flex;
+justify-content:space-between;align-items:center;gap:6px}
+.ri label{font-size:11px;color:var(--ink2);white-space:nowrap}
+.ri input{width:62px;height:27px;text-align:center;font-size:11.5px;padding:0 4px}
+.hint{font-size:11px;color:var(--ink3);margin-top:5px}
+/* ％計算パネル（金額を直接入力モーダル） */
+.amt-input{height:46px;font-size:18px;font-weight:700}
+.calc-toggle{display:flex;align-items:center;gap:10px;width:100%;padding:13px 15px;border:1.5px solid var(--line);
+  border-radius:8px;background:#fff;cursor:pointer;font-family:var(--fm);text-align:left}
+.calc-toggle:hover{background:var(--brand-soft);border-color:#C9D6E3}
+.calc-toggle.open{border-color:var(--brand);background:var(--brand-soft)}
+.calc-toggle-icon{font-size:12px;color:var(--ink3);flex-shrink:0;width:12px}
+.calc-toggle-title{font-size:14.5px;font-weight:700;color:var(--ink)}
+.calc-toggle-sub{font-size:12px;color:var(--ink3);margin-left:auto;font-weight:400;white-space:nowrap}
+.calc-panel{margin-top:10px;padding:16px;background:var(--bg);border:1.5px solid var(--line);border-radius:8px}
+.calc-section-label{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:9px}
+.calc-section-label.n2{margin-top:18px}
+.ref-list{display:flex;flex-direction:column;gap:7px;max-height:240px;overflow:auto;padding:2px 2px 2px 0}
+.ref-item{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1.5px solid var(--line);
+  border-radius:8px;background:#fff;cursor:pointer}
+.ref-item:hover{border-color:#C9D6E3;background:var(--brand-soft)}
+.ref-item.on{border-color:var(--gold-d);background:#FCF6DC}
+.ref-item .cb{width:21px;height:21px;flex-shrink:0;cursor:pointer;accent-color:var(--brand)}
+.ref-item .nm{font-size:14.5px;color:var(--ink);flex:1}
+.ref-item .amt{font-size:14.5px;font-weight:700;color:var(--ink3);font-family:var(--fn);font-variant-numeric:tabular-nums}
+.ref-item.on .amt{color:var(--ink)}
+.ref-empty{font-size:13.5px;color:var(--ink3);padding:10px 2px}
+.ref-sum{margin-top:11px;padding:11px 15px;background:#fff;border:1.5px solid var(--line);border-radius:8px;
+  font-size:14px;font-weight:700;color:var(--ink);text-align:right}
+.calc-pct-row{display:flex;align-items:center;gap:11px}
+.calc-pct-input{width:118px;height:46px;font-size:17px;text-align:center;font-weight:700}
+.calc-pct-unit{font-size:15px;color:var(--ink2);font-weight:700}
+.calc-pct-row .btn.p{height:46px;font-size:13.5px;padding:0 18px}
+.calc-preview{margin-top:11px;padding:12px 15px;background:#FCF6DC;border:1.5px solid var(--gold-d);
+  border-radius:8px;font-size:13px;color:var(--ink);line-height:1.65}
+#printArea{display:none}
+@page{size:A4;margin:14mm 12mm}
+@media print{.shell,.mask,.toast{display:none !important}
+  #printArea{display:block !important}
+  .doc table{width:100%;border-collapse:collapse}
+  .doc thead{display:table-header-group}
+  .doc tbody.grp{break-inside:avoid;page-break-inside:avoid}
+  .doc tr{break-inside:avoid;page-break-inside:avoid}}
+.doc{font-size:11px;color:#111;font-family:var(--fm)}
+.doc h1{font-size:21px;text-align:center;letter-spacing:6px;margin:6px 0;font-weight:700}
+.doc .amt{text-align:center;font-size:14px;font-weight:700;border:2px solid #232323;padding:8px;
+background:#EDF1F6;margin:10px 0 16px}
+.doc .meta{display:grid;grid-template-columns:96px 1fr 96px 1fr;border:1px solid #AAA;margin-bottom:14px}
+.doc .meta div{padding:5px 9px;border-bottom:1px solid #DDD;font-size:10.5px}
+.doc .meta .k{background:#F2F2EF;font-weight:700;border-right:1px solid #DDD}
+.doc table{width:100%;border-collapse:collapse}
+.doc th{background:#232323;color:#fff;padding:6px 8px;font-size:10px}
+.doc th.info{background:#F2F2EF;color:#333;text-align:left;font-weight:500;font-size:9.5px;
+padding:4px 8px;border-bottom:1px solid #ccc}
+.doc td{padding:5px 8px;border-bottom:1px solid #E2E2E2;font-size:10px}
+.doc .sum{width:280px;margin-left:auto;border:1px solid #AAA;margin-top:10px}
+.doc .sum .tt{background:#232323;color:#fff;font-weight:700}
+.doc .co{border-top:1px solid #333;margin-top:18px;padding-top:9px;font-size:10px;color:#555;text-align:right}
+</style></head><body>
+
+<div class="shell">
+<aside class="side">
+  <div class="brandbadge">EQUIPMENT SYSTEM</div>
+  <div class="brand"><div class="n1">STUDIO ELEPHANT</div><div class="n2">機材在庫管理システム</div></div>
+  <nav class="menu">
+    <button class="mi on" data-p="dash" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>ダッシュボード</button>
+    <button class="mi" data-p="inv" onclick="go('inv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="M3.3 7L12 12l8.7-5M12 22V12"/></svg>機材一覧</button>
+    <button class="mi" data-p="io" onclick="go('io')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>入出荷</button>
+    <button class="mi" data-p="est" onclick="go('est')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>見積作成</button>
+    <button class="mi" data-p="hist" onclick="go('hist')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 106 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>履歴</button>
+    <button class="mi" data-p="set" onclick="go('set')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 008 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 8a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>設定</button>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="hd"><h1 id="ptitle">ダッシュボード</h1>
+    <div class="r"><span class="pill" id="stat">読込中</span></div></div>
+  <div class="body">
+    <div id="ldg" class="ldg">データを読み込んでいます…</div>
+    <div id="app" style="display:none">
+
+<!-- ===== ダッシュボード ===== -->
+<div class="page on" id="p-dash">
+  <div id="swarn"></div>
+  <div class="g4" style="margin-bottom:14px" id="kpis"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><h2>在庫分析</h2>
+        <div class="seg"><button class="on" id="sg-cat" onclick="chart('cat')">カテゴリ別</button>
+        <button id="sg-hin" onclick="chart('hin')">品目別</button></div></div>
+      <div id="chart"></div>
+    </div>
+    <div class="card"><div class="ch"><h2>直近の動き</h2>
+      <button class="btn s" onclick="doSync()">マスターから同期</button></div>
+      <div id="recent"></div></div>
+  </div>
+</div>
+
+<!-- ===== 機材一覧 ===== -->
+<div class="page" id="p-inv">
+  <div class="card">
+    <div class="ch"><h2>絞り込み</h2>
+      <div style="display:flex;gap:6px">
+        <button class="btn s" onclick="csvItems()">CSV出力</button>
+        <button class="btn s" onclick="openMaster()">マスターを開く</button></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input id="q" placeholder="ID・機材名・品目で検索" oninput="renderInv()" style="flex:2;min-width:180px">
+      <select id="fc" onchange="renderInv()" style="flex:1;min-width:110px"><option value="">全カテゴリ</option><option>映像</option><option>音響</option><option>照明</option><option>その他</option></select>
+      <select id="fs" onchange="renderInv()" style="flex:1;min-width:110px"><option value="">在庫状況</option><option value="ok">在庫あり</option><option value="low">残りわずか</option><option value="out">在庫なし</option></select>
+      <select id="ft" onchange="renderInv()" style="flex:1;min-width:100px"><option value="">全タイプ</option><option value="A">Aタイプ</option><option value="B">Bタイプ</option></select>
+      <select id="fp" onchange="renderInv()" style="flex:1;min-width:120px"><option value="">単価すべて</option><option value="none">単価未設定</option><option value="set">単価設定済</option></select>
+    </div>
+    <div class="note" style="margin-top:10px">機材の追加・数量変更は公開マスター側で行います。ここでは単価・原価・料金タイプを設定します。</div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table><thead><tr><th style="width:74px">ID</th><th style="width:70px">カテゴリ</th><th>品目</th>
+      <th>機材名</th><th style="width:52px;text-align:center">型</th>
+      <th style="width:56px;text-align:right">総数</th><th style="width:56px;text-align:right">貸出</th>
+      <th style="width:78px;text-align:right">在庫</th><th style="width:92px;text-align:right">日額</th>
+      <th style="width:92px;text-align:right">原価</th><th style="width:56px"></th></tr></thead>
+      <tbody id="invb"></tbody></table>
+    <div id="invpg" style="display:flex;gap:5px;align-items:center;justify-content:flex-end;padding:10px 16px;border-top:1px solid var(--line2)"></div>
+  </div>
+</div>
+
+<!-- ===== 入出荷 ===== -->
+<div class="page" id="p-io">
+  <div class="g2">
+    <div class="card"><div class="ch"><h2 style="color:var(--pos)">入荷（返却）登録</h2></div>
+      <div class="fg"><label class="fl">機材</label><select id="in-i"></select></div>
+      <div class="g2" style="gap:10px">
+        <div class="fg"><label class="fl">数量</label><input type="number" id="in-q" value="1" min="1" class="num"></div>
+        <div class="fg"><label class="fl">案件名 / 備考</label><input id="in-n" placeholder="〇〇イベント返却"></div>
+      </div>
+      <button class="btn g" style="width:100%" onclick="doIO(-1)">入荷を登録する</button></div>
+    <div class="card"><div class="ch"><h2 style="color:var(--dng)">出荷登録</h2></div>
+      <div class="fg"><label class="fl">機材</label><select id="out-i"></select></div>
+      <div class="g2" style="gap:10px">
+        <div class="fg"><label class="fl">数量</label><input type="number" id="out-q" value="1" min="1" class="num"></div>
+        <div class="fg"><label class="fl">案件名 / 備考</label><input id="out-n" placeholder="〇〇イベント搬出"></div>
+      </div>
+      <button class="btn d" style="width:100%" onclick="doIO(1)">出荷を登録する</button></div>
+  </div>
+  <div class="card"><div class="ch"><h2>案件単位で一括返却</h2></div>
+    <div style="display:flex;gap:8px"><select id="ret-est" style="flex:1"></select>
+      <button class="btn g" onclick="doReturnEst()">一括返却</button></div></div>
+  <div class="card"><div class="ch"><h2>現在の貸出中機材</h2></div>
+    <table><thead><tr><th style="width:74px">ID</th><th>機材名</th><th style="width:70px">カテゴリ</th>
+      <th style="width:70px;text-align:right">貸出中</th><th style="width:80px;text-align:right">残在庫</th></tr></thead>
+      <tbody id="iob"></tbody></table></div>
+</div>
+
+<!-- ===== 見積作成 ===== -->
+<div class="page" id="p-est">
+  <div id="editbanner"></div>
+  <div class="card"><div class="ch"><h2>案件情報</h2>
+    <div style="display:flex;gap:6px">
+      <button class="btn s" onclick="clearEst()">クリア</button>
+      <button class="btn s" onclick="csvEst()">CSV</button>
+      <button class="btn s" onclick="preview()">見積書プレビュー</button>
+      <button class="btn p s" id="btn-saveest" onclick="saveEst()">見積を保存</button></div></div>
+    <div class="g3">
+      <div class="fg"><label class="fl">見積コード</label><input id="e-code" placeholder="M10200-01"></div>
+      <div class="fg"><label class="fl">案件名</label><input id="e-proj" placeholder="〇〇社 年次総会"></div>
+      <div class="fg"><label class="fl">担当者</label><input id="e-person"></div>
+    </div>
+    <div class="g3">
+      <div class="fg"><label class="fl">場所</label><input id="e-place"></div>
+      <div class="fg"><label class="fl">お支払条件</label><input id="e-pay" value="別途打合せ"></div>
+      <div class="fg"><label class="fl">日数（掛率へ反映）</label><input type="number" id="e-days" value="1" min="1" max="62" class="num" onchange="applyDays()"></div>
+    </div>
+    <div class="g3">
+      <div class="fg"><label class="fl">搬入日</label><input type="date" id="e-in" onchange="calcDays()"></div>
+      <div class="fg"><label class="fl">本番日</label><input type="date" id="e-hon" onchange="calcDays()"></div>
+      <div class="fg"><label class="fl">搬出日</label><input type="date" id="e-out" onchange="calcDays()"></div>
+    </div>
+    <div class="fg" style="margin-bottom:0"><label class="fl">備考</label><textarea id="e-biko" rows="2"></textarea></div>
+  </div>
+
+  <div class="card"><div class="ch"><h2>明細を追加</h2>
+    <div class="seg"><button class="on" id="ad-sel" onclick="addMode('sel')">選択して追加</button>
+      <button id="ad-src" onclick="addMode('src')">検索して追加</button>
+      <button id="ad-man" onclick="addMode('man')">手入力</button></div></div>
+
+    <div class="fg" style="margin-bottom:12px">
+      <label class="fl">現在のグループ（freeeの明細項目に対応／例：映像機材費、音響機材費、諸経費 等）</label>
+      <div style="display:flex;gap:8px;align-items:center;max-width:520px">
+        <input id="e-grp" placeholder="空欄のままでも追加できます" list="grplist" style="flex:1">
+        <datalist id="grplist"></datalist>
+        <button class="btn s" onclick="addPlannedGroup()">グループだけ先に作る</button>
+      </div>
+      <div class="hint">ここに名前を入れてから機材を追加すると、そのグループにまとめて入ります。先に「グループだけ先に作る」を押しておけば、機材がまだ無くても見積明細にグループの枠だけ用意できます。</div>
+    </div>
+    <div class="note" style="margin-bottom:12px">
+      <b>A</b>：日額×掛け率（日数で自動変化）　<b>B</b>：日額×日数　<b>C</b>：掛け率なし（1式・単価をそのまま金額にします。営業経費や諸経費、雑費などに）<br>
+      値引き・特定項目への割引や上乗せは、下の見積明細で対象行を選択すると出てくる「割引/上乗せを適用」、またはグループ見出しの「＋金額を直接入力」（％計算つき）から行えます。
+    </div>
+
+    <div id="pane-sel">
+      <div style="display:grid;grid-template-columns:1fr 1fr 2fr 76px auto;gap:8px;align-items:end">
+        <div><label class="fl">カテゴリ</label><select id="s-cat" onchange="fillHin()"></select></div>
+        <div><label class="fl">品目</label><select id="s-hin" onchange="fillItem()"></select></div>
+        <div><label class="fl">機材</label><select id="s-item"></select></div>
+        <div><label class="fl">数量</label><input type="number" id="s-qty" value="1" min="1" class="num"></div>
+        <div><button class="btn p" onclick="addFromSelect()">明細に追加</button></div>
+      </div>
+      <div class="hint" id="s-hint"></div>
+    </div>
+
+    <div id="pane-src" style="display:none">
+      <div style="display:flex;gap:8px;align-items:end">
+        <div style="flex:1"><label class="fl">キーワード（ID / 機材名 / 品目）</label>
+          <input id="eq" placeholder="例：V-0001、スイッチャー、SM58" oninput="estSearch()"></div>
+        <div style="width:76px"><label class="fl">数量</label><input type="number" id="q-qty" value="1" min="1" class="num"></div>
+      </div>
+      <div class="res" id="eres" style="margin-top:8px"></div>
+    </div>
+
+    <div id="pane-man" style="display:none">
+      <div style="display:grid;grid-template-columns:2fr 90px 76px 110px 110px auto;gap:8px;align-items:end">
+        <div><label class="fl">品名</label><input id="m-n" placeholder="テクニカルコーディネーター"></div>
+        <div><label class="fl">単位</label><input id="m-u" placeholder="人 / 式"></div>
+        <div><label class="fl">数量</label><input type="number" id="m-q" value="1" min="1" class="num"></div>
+        <div><label class="fl">単価</label><input type="number" id="m-p" value="0" min="0" class="num"></div>
+        <div><label class="fl">タイプ</label><select id="m-t"><option value="A">Aタイプ</option><option value="B">Bタイプ</option><option value="C">Cタイプ（掛け率なし）</option></select></div>
+        <div><button class="btn p" onclick="addManual()">明細に追加</button></div>
+      </div>
+      <div class="hint">人件費・運搬費など、機材マスターに無い項目を直接入力できます。</div>
+    </div>
+  </div>
+
+  <div class="card"><div class="ch"><h2>見積明細</h2><span class="mut" id="e-cnt"></span></div>
+    <div class="hint" style="margin:-4px 0 8px">行をドラッグ、またはクリック（Shiftで範囲選択）してから下のツールバーでグループへ移動できます。</div>
+    <div id="seltool"></div>
+    <div style="display:flex;gap:6px;font-size:10.5px;color:var(--ink3);padding:0 0 7px;font-weight:700;
+      border-bottom:1px solid var(--line)">
+      <span style="width:14px"></span><span style="width:16px"></span>
+      <span style="width:22px">No</span><span style="flex:1">品名</span>
+      <span style="width:44px;text-align:center">型</span><span style="width:52px;text-align:center">数量</span>
+      <span style="width:52px;text-align:center">単位</span><span style="width:52px;text-align:center">日数</span>
+      <span style="width:46px;text-align:center">掛率</span><span style="width:82px;text-align:right">単価</span>
+      <span style="width:92px;text-align:right">金額</span><span style="width:92px;text-align:right">調整後</span>
+      <span style="width:24px"></span></div>
+    <div id="elines"></div>
+    <div id="esum"></div>
+  </div>
+  <div class="card"><div class="ch"><h2>freee連携用（グループ小計のみ）</h2>
+    <div style="display:flex;gap:6px">
+      <button class="btn s" onclick="csvFreee()">CSV</button></div></div>
+    <div class="hint" style="margin-bottom:8px">freeeの明細行に、品名・数量・単価をそれぞれコピーして貼り付けてください。</div>
+    <div id="freeeprev"></div>
+  </div>
+</div>
+
+<!-- ===== 履歴 ===== -->
+<div class="page" id="p-hist">
+  <div class="card"><div class="ch"><h2>保存済み見積</h2><span class="mut" id="hist-est-cnt"></span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <input id="hist-est-q" placeholder="案件名・見積コード・担当者・所有者で検索" oninput="histEstFilter()" style="flex:1;min-width:180px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;padding:0 4px">
+        <input type="checkbox" id="hist-est-mine" onchange="histEstFilter()" style="width:16px;height:16px">自分の見積のみ</label>
+    </div>
+    <div id="ests"></div></div>
+  <div class="card"><div class="ch"><h2>入出荷ログ</h2>
+    <div class="seg"><button class="on" onclick="hf('all',this)">すべて</button>
+      <button onclick="hf('入荷',this)">入荷</button><button onclick="hf('出荷',this)">出荷</button>
+      <button onclick="hf('見積',this)">見積</button></div></div>
+    <div id="hlist"></div></div>
+</div>
+
+<!-- ===== 設定 ===== -->
+<div class="page" id="p-set">
+  <div id="adminwarn"></div>
+  <div class="card"><div class="ch"><h2>データ連携</h2></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn p" onclick="doSync()">マスターから今すぐ同期</button>
+      <button class="btn" onclick="openMaster()">公開マスターを開く</button>
+      <button class="btn" onclick="openApp()">アプリデータを開く</button></div>
+    <div class="hint">毎朝6時に自動同期されます。</div></div>
+
+  <div class="card"><div class="ch"><h2>長期レンタルの上限設定</h2></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">Aタイプ掛率の上限（0＝無制限）</label>
+        <input type="number" id="c-rateCap" step="0.05" min="0" class="num">
+        <div class="hint">例：5.0 と入れると、何日でも掛率は5.0で頭打ちになります。</div></div>
+      <div class="fg"><label class="fl">原価に対する上限率（％／0＝無効）</label>
+        <input type="number" id="c-costRatio" min="0" class="num">
+        <div class="hint">例：80 と入れると、1点あたり金額が原価の80％を超えた行に警告が出ます。</div></div>
+    </div>
+    <div class="note">上限に達した明細は見積画面で色が変わり、ワンクリックで上限額に丸められます。個別に金額を上書きすることもできます（特殊裁定）。</div>
+  </div>
+
+  <div class="card"><div class="ch"><h2>Aタイプ 掛け率テーブル</h2>
+    <div style="display:flex;gap:6px"><button class="btn s p" onclick="doSaveRates()">保存</button>
+      <button class="btn s" onclick="resetRates()">初期値</button></div></div>
+    <div class="rg" id="rg"></div></div>
+
+  <div class="card"><div class="ch"><h2>会社情報・表示</h2></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">会社名</label><input id="c-company"></div>
+      <div class="fg"><label class="fl">住所</label><input id="c-address"></div></div>
+    <div class="g3">
+      <div class="fg"><label class="fl">TEL</label><input id="c-tel"></div>
+      <div class="fg"><label class="fl">FAX</label><input id="c-fax"></div>
+      <div class="fg"><label class="fl">消費税率（％）</label><input type="number" id="c-tax" class="num"></div></div>
+    <div class="g3">
+      <div class="fg"><label class="fl">在庫わずかの閾値（台）</label><input type="number" id="c-threshold" class="num"></div>
+      <div class="fg"><label class="fl">1ページ表示件数</label><input type="number" id="c-pageSize" class="num"></div>
+      <div class="fg"><label class="fl">管理者メール（カンマ区切り）</label><input id="c-admins" placeholder="空欄なら全員が管理者"></div></div>
+    <button class="btn p" style="width:100%" onclick="doSaveCfg()">設定を保存</button></div>
+</div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 単価ダイアログ -->
+<div class="mask" id="m-price"><div class="dlg" style="width:440px">
+  <div class="dlg-h"><b>単価・原価の設定</b><button class="x" onclick="cl('m-price')">×</button></div>
+  <div class="dlg-b"><input type="hidden" id="pe-id">
+    <div class="fg"><label class="fl">機材</label><input id="pe-name" disabled></div>
+    <div class="g2">
+      <div class="fg"><label class="fl">日額レンタル料金（円）</label><input type="number" id="pe-price" min="0" class="num"></div>
+      <div class="fg"><label class="fl">原価・取得価格（円）</label><input type="number" id="pe-cost" min="0" class="num"></div>
+    </div>
+    <div class="fg" style="margin-bottom:0"><label class="fl">料金計算タイプ</label>
+      <select id="pe-type"><option value="A">Aタイプ（掛け率で計算）</option><option value="B">Bタイプ（日額×日数）</option><option value="C">Cタイプ（掛け率なし・1式で調整）</option></select></div>
+    <div class="hint">原価を入れておくと、長期レンタル時に上限を超えた明細を自動で検知します。</div>
+  </div>
+  <div class="dlg-f"><button class="btn" onclick="cl('m-price')">キャンセル</button>
+    <button class="btn p" onclick="doSavePrice()">保存</button></div></div></div>
+
+<!-- 金額を直接入力（諸経費・雑費・値引きなど・明細内訳なし） -->
+<div class="mask" id="m-flat"><div class="dlg" style="width:560px">
+  <div class="dlg-h"><b>金額を直接入力</b><button class="x" onclick="cl('m-flat')">×</button></div>
+  <div class="dlg-b">
+    <div class="fg"><label class="fl">費目名</label><input id="mf-name" placeholder="諸経費 / 営業経費 / 値引き など"></div>
+    <div class="fg"><label class="fl">金額</label><input type="number" id="mf-amt" value="0" class="num amt-input"></div>
+    <div class="hint" style="margin-bottom:16px">品目の内訳を作らず、この金額をそのままグループの小計に加えます（掛け率はかかりません）。値引きの場合はマイナスの金額を入力してください（例：-50000）。同じグループに複数追加することもできます。</div>
+    <button type="button" class="calc-toggle" id="mf-calc-tgl" onclick="toggleFlatCalc()">
+      <span class="calc-toggle-icon" id="mf-calc-icon">▸</span>
+      <span class="calc-toggle-title">％で自動計算する</span>
+      <span class="calc-toggle-sub">他のグループの小計を基準に計算</span>
+    </button>
+    <div id="mf-calc" class="calc-panel" style="display:none">
+      <div class="calc-section-label">① 基準にするグループを選ぶ（複数選んで合算できます）</div>
+      <div id="mf-refgrp" class="ref-list"></div>
+      <div class="ref-sum" id="mf-ref-sum">選択中の合計：¥0</div>
+      <div class="calc-section-label n2">② 割合を入力（マイナスで割引、プラスで上乗せ）</div>
+      <div class="calc-pct-row">
+        <input type="number" id="mf-pct" placeholder="例：-10" class="num calc-pct-input">
+        <span class="calc-pct-unit">％</span>
+        <button class="btn p" onclick="calcFlatFromPct()">計算して反映</button>
+      </div>
+      <div class="calc-preview" id="mf-calc-preview" style="display:none"></div>
+    </div>
+  </div>
+  <div class="dlg-f"><button class="btn" onclick="cl('m-flat')">キャンセル</button>
+    <button class="btn p" onclick="doAddFlat()">追加</button></div></div></div>
+
+<!-- 出荷確認 -->
+<div class="mask" id="m-io"><div class="dlg" style="width:460px">
+  <div class="dlg-h"><b>出荷登録の確認</b><button class="x" onclick="cl('m-io')">×</button></div>
+  <div class="dlg-b"><p style="margin-bottom:10px">見積「<b id="io-proj"></b>」の機材を出荷登録しますか？</p>
+    <div id="io-prev" style="max-height:240px;overflow:auto;font-size:12px"></div></div>
+  <div class="dlg-f"><button class="btn" onclick="confirmIO(false)">登録しない</button>
+    <button class="btn g" onclick="confirmIO(true)">出荷登録する</button></div></div></div>
+
+<!-- 見積書 -->
+<div class="mask" id="m-doc"><div class="dlg" style="width:840px">
+  <div class="dlg-h"><b>見積書プレビュー</b>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn p s" onclick="window.print()">印刷 / PDF保存</button>
+      <button class="x" onclick="cl('m-doc')">×</button></div></div>
+  <div class="dlg-b"><div id="docbody" class="doc"></div></div></div></div>
+
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+var S={items:[],history:[],estimates:[],cfg:{},rates:{},user:'',isAdmin:false,masterUrl:'',appUrl:''};
+var page=1, lines=[], cmode='cat', hfil='all', pend=null, amode='sel', editingEstId=null;
+var lineSeq=1, selKeys={}, lastSelK=null, dragKeys=[], renderOrder=[], groupsCache=[], plannedGroups=[], flatGi=null;
+var DEF={0:0.5,1:1,2:1.3,3:1.5,4:1.7,5:1.9,6:2.15,7:2.4,8:2.65,9:2.9,10:3.15,11:3.4,12:3.65,
+13:3.9,14:4.15,15:4.4,16:4.65,17:4.9,18:5.15,19:5.4,20:5.65,21:5.9,22:6.15,23:6.4,24:6.65,
+25:6.9,26:7.15,27:7.4,28:7.65,29:7.9,30:8.15,31:8.4,
+32:8.65,33:8.9,34:9.15,35:9.4,36:9.65,37:9.9,38:10.15,39:10.4,40:10.65,41:10.9,42:11.15,
+43:11.4,44:11.65,45:11.9,46:12.15,47:12.4,48:12.65,49:12.9,50:13.15,51:13.4,52:13.65,
+53:13.9,54:14.15,55:14.4,56:14.65,57:14.9,58:15.15,59:15.4,60:15.65,61:15.9,62:16.15};
+var TITLES={dash:'ダッシュボード',inv:'機材一覧',io:'入出荷管理',est:'見積作成',hist:'履歴',set:'設定'};
+
+function $(i){return document.getElementById(i);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function yen(n){return Number(n||0).toLocaleString();}
+function yenS(n){n=Math.round(Number(n||0));return n<0?'-¥'+Math.abs(n).toLocaleString():'¥'+n.toLocaleString();}
+function cl(i){$(i).classList.remove('on');}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');
+  setTimeout(function(){t.classList.remove('on');},2900);}
+function stat(k,m){var e=$('stat');e.className='pill'+(k?' '+k:'');e.textContent=m;}
+function num(v){return Number(v)||0;}
+
+function rate(t,d){
+  if(t==='C')return 1;
+  var r;
+  if(t==='B'){r=d;}else{var k=Math.max(0,Math.min(62,Math.round(d)));
+    var v=S.rates[String(k)];r=(v===undefined||v===null)?DEF[k]:v;}
+  var cap=num(S.cfg.rateCap);
+  if(t==='A'&&cap>0&&r>cap)r=cap;
+  return Math.round(r*1000)/1000;
+}
+function stock(i){return num(i.total)-num(i.rented);}
+function scls(i){var s=stock(i),t=num(S.cfg.threshold)||2;return s<=0?'no':(s<=t?'lw':'ok');}
+function slbl(i){var s=stock(i),t=num(S.cfg.threshold)||2;
+  return s<=0?'在庫なし':(s<=t?'残り'+s+'台':s+'台');}
+function act(){return S.items.filter(function(i){return i.status!=='廃番';});}
+function cap(l){ // 上限額（1明細あたり）。0なら無効
+  var it=l.id?S.items.filter(function(x){return x.id===l.id;})[0]:null;
+  var ratio=num(S.cfg.costRatio);
+  if(!it||!num(it.cost)||!ratio)return 0;
+  return Math.round(num(it.cost)*l.qty*ratio/100);
+}
+function amount(l){
+  if(l.adjust!==null&&l.adjust!==undefined&&l.adjust!=='')return Math.round(num(l.adjust));
+  return Math.round(l.qty*l.rate*l.price);
+}
+function over(l){var c=cap(l);return c>0&&amount(l)>c;}
+
+/* ---- 起動 ---- */
+google.script.run.withSuccessHandler(boot).withFailureHandler(function(e){
+  stat('er','接続エラー');
+  $('ldg').innerHTML='<b style="color:#9E3229">読み込みに失敗しました</b><br><br>'+esc(e.message);
+}).getBootstrap();
+
+function boot(d){
+  S=d;$('ldg').style.display='none';$('app').style.display='block';
+  stat('ok','接続OK');
+  if(d.masterError)$('swarn').innerHTML='<div class="warn">'+esc(d.masterError)+'</div>';
+  if(!d.isAdmin)$('adminwarn').innerHTML='<div class="warn">閲覧モードです。単価・掛率・設定の変更は管理者のみ行えます。</div>';
+  renderAll();
+}
+function renderAll(){renderDash();renderInv();renderIO();renderHist();renderSet();fillCat();renderEditBanner();renderLines();}
+function go(p){
+  var a=document.querySelectorAll('.page');for(var i=0;i<a.length;i++)a[i].classList.remove('on');
+  var b=document.querySelectorAll('.mi');for(var j=0;j<b.length;j++)b[j].classList.remove('on');
+  $('p-'+p).classList.add('on');
+  document.querySelector('.mi[data-p="'+p+'"]').classList.add('on');
+  $('ptitle').textContent=TITLES[p];window.scrollTo(0,0);
+}
+
+/* ---- 同期 ---- */
+function doSync(){
+  stat('','同期中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','同期失敗');$('swarn').innerHTML='<div class="warn"><b>同期を中止しました</b><br>'+
+      (r.errors||[]).map(esc).join('<br>')+'</div>';toast('同期を中止しました');return;}
+    S.items=r.items;stat('ok','同期OK');
+    var w='';
+    if(r.warnings&&r.warnings.length)w+='<div class="warn"><b>数量の警告</b><br>'+r.warnings.map(esc).join('<br>')+'</div>';
+    if(r.skipped&&r.skipped.length)w+='<div class="warn"><b>スキップした行</b><br>'+r.skipped.map(esc).join('<br>')+'</div>';
+    $('swarn').innerHTML=w;
+    toast('同期完了：追加'+r.added+' / 更新'+r.updated+' / 廃番'+r.retired);
+    renderAll();
+  }).withFailureHandler(function(e){stat('er','同期失敗');toast(e.message);}).manualSync();
+}
+function openMaster(){if(S.masterUrl)window.open(S.masterUrl,'_blank');else toast('マスターURLを取得できません');}
+function openApp(){window.open(S.appUrl,'_blank');}
+
+/* ---- ダッシュボード ---- */
+function renderDash(){
+  var a=act(),tot=0,ren=0,low=0,nop=0;
+  a.forEach(function(i){tot+=num(i.total);ren+=num(i.rented);
+    if(stock(i)>0&&stock(i)<=(num(S.cfg.threshold)||2))low++;
+    if(!num(i.price))nop++;});
+  $('kpis').innerHTML=
+    kpi('機材種類',a.length,'',(a.length?'':'マスター未同期')) +
+    kpi('総在庫数',tot,'','うち貸出中 '+ren+'台') +
+    kpi('貸出中',ren,ren?'var(--wrn)':'',ren?'返却待ち':'すべて在庫') +
+    kpi('単価未設定',nop,nop?'var(--dng)':'var(--pos)',nop?'見積に使えません':'設定済');
+  chart(cmode);
+  $('recent').innerHTML=S.history.slice(0,7).map(ev).join('')||
+    '<p class="mut" style="padding:6px 0">まだ履歴がありません</p>';
+}
+function kpi(l,v,c,s){return '<div class="kpi"><div class="l">'+l+'</div><div class="v num"'+
+  (c?' style="color:'+c+'"':'')+'>'+yen(v)+'</div><div class="s">'+(s||'')+'</div></div>';}
+function ev(h){return '<div class="ev"><div class="ev-t e'+esc(h.type)+'">'+esc(h.type)+'</div>'+
+  '<div style="flex:1;min-width:0"><b>'+esc(h.name)+(h.qty?' <span class="num">×'+h.qty+'</span>':'')+'</b>'+
+  '<div style="font-size:11px;color:var(--ink3)">'+esc(h.note||'')+'</div></div>'+
+  '<div style="font-size:10.5px;color:var(--ink3);white-space:nowrap" class="num">'+esc(h.date)+'</div></div>';}
+
+function chart(m){
+  cmode=m;$('sg-cat').classList.toggle('on',m==='cat');$('sg-hin').classList.toggle('on',m==='hin');
+  var a=act(),rows=[];
+  if(m==='cat'){
+    var cs=['映像','音響','照明','その他'],cc={'映像':'#2B5D8A','音響':'#3E6B3B','照明':'#8A6A1F','その他':'#8B8A85'};
+    rows=cs.map(function(c){var v=0;a.forEach(function(i){if(i.cat===c)v+=num(i.total);});return [c,v,cc[c]];});
+  }else{
+    var mp={};a.forEach(function(i){mp[i.hinmoku]=(mp[i.hinmoku]||0)+num(i.total);});
+    rows=Object.keys(mp).map(function(k){return [k,mp[k],'#2B5D8A'];})
+      .sort(function(x,y){return y[1]-x[1];}).slice(0,20);
+  }
+  var mx=1;rows.forEach(function(r){if(r[1]>mx)mx=r[1];});
+  $('chart').innerHTML='<div style="max-height:296px;overflow:auto">'+rows.map(function(r){
+    return '<div class="bar"><span class="bar-n" title="'+esc(r[0])+'">'+esc(r[0])+'</span>'+
+      '<div class="bar-t"><div class="bar-f" style="background:'+r[2]+';width:'+
+      Math.round(r[1]/mx*100)+'%"></div></div><span class="bar-v num">'+r[1]+'</span></div>';}).join('')+'</div>';
+}
+
+/* ---- 機材一覧 ---- */
+function filt(){
+  var q=($('q').value||'').toLowerCase(),c=$('fc').value,st=$('fs').value,t=$('ft').value,p=$('fp').value;
+  return act().filter(function(i){
+    if(q&&(i.id+' '+i.name+' '+i.hinmoku).toLowerCase().indexOf(q)<0)return false;
+    if(c&&i.cat!==c)return false;
+    if(t&&i.ptype!==t)return false;
+    if(p==='none'&&num(i.price))return false;
+    if(p==='set'&&!num(i.price))return false;
+    var s=scls(i);
+    if(st==='ok'&&s!=='ok')return false;
+    if(st==='low'&&s!=='lw')return false;
+    if(st==='out'&&s!=='no')return false;
+    return true;
+  }).sort(function(a,b){return a.id<b.id?-1:1;});
+}
+function renderInv(){
+  var f=filt(),ps=num(S.cfg.pageSize)||50,tp=Math.ceil(f.length/ps)||1;
+  if(page>tp)page=1;
+  $('invb').innerHTML=f.slice((page-1)*ps,page*ps).map(function(i){
+    return '<tr><td class="mut num" style="font-size:11px">'+esc(i.id)+'</td>'+
+    '<td><span class="tg t'+esc(i.cat)+'">'+esc(i.cat)+'</span></td>'+
+    '<td class="mut">'+esc(i.hinmoku)+'</td>'+
+    '<td><b>'+esc(i.name)+'</b>'+(i.naibu?'<div style="font-size:10.5px;color:var(--dng)">'+esc(i.naibu)+'</div>':'')+'</td>'+
+    '<td style="text-align:center"><span class="tg t'+esc(i.ptype)+'">'+esc(i.ptype)+'</span></td>'+
+    '<td style="text-align:right" class="num">'+i.total+'</td>'+
+    '<td style="text-align:right" class="num'+(i.rented?' no':' mut')+'">'+i.rented+'</td>'+
+    '<td style="text-align:right" class="'+scls(i)+' num">'+slbl(i)+'</td>'+
+    '<td style="text-align:right" class="num'+(num(i.price)?'':' no')+'">'+(num(i.price)?yen(i.price):'未設定')+'</td>'+
+    '<td style="text-align:right" class="num mut">'+(num(i.cost)?yen(i.cost):'—')+'</td>'+
+    '<td><button class="btn s" onclick="editPrice(\''+i.id+'\')">設定</button></td></tr>';}).join('')
+    ||'<tr><td colspan="11" class="mut" style="padding:24px;text-align:center">該当する機材がありません</td></tr>';
+  var h='';
+  if(tp>1){h+='<span class="mut" style="font-size:11px;margin-right:4px">'+f.length+'件中 '+
+    ((page-1)*ps+1)+'〜'+Math.min(page*ps,f.length)+'</span>';
+    h+='<button class="btn s" onclick="pgo('+(page-1)+')">‹</button>';
+    var s=Math.max(1,page-2),e=Math.min(tp,page+2);
+    for(var p=s;p<=e;p++)h+='<button class="btn s'+(p===page?' pg-on':'')+'" onclick="pgo('+p+')">'+p+'</button>';
+    h+='<button class="btn s" onclick="pgo('+(page+1)+')">›</button>';}
+  $('invpg').innerHTML=h;
+}
+function pgo(p){var tp=Math.ceil(filt().length/(num(S.cfg.pageSize)||50));
+  if(p<1||p>tp)return;page=p;renderInv();}
+function editPrice(id){
+  if(!S.isAdmin){toast('単価の変更は管理者のみ可能です');return;}
+  var i=S.items.filter(function(x){return x.id===id;})[0];if(!i)return;
+  $('pe-id').value=id;$('pe-name').value=i.id+'  '+i.name;
+  $('pe-price').value=num(i.price);$('pe-cost').value=num(i.cost);$('pe-type').value=i.ptype||'A';
+  $('m-price').classList.add('on');
+}
+function doSavePrice(){
+  stat('','保存中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.items=r.items;stat('ok','保存OK');cl('m-price');renderInv();renderDash();fillItem();toast('保存しました');
+  }).savePricing([{id:$('pe-id').value,price:num($('pe-price').value),
+    cost:num($('pe-cost').value),ptype:$('pe-type').value}]);
+}
+
+/* ---- 入出荷 ---- */
+function renderIO(){
+  var a=act().slice().sort(function(x,y){return x.id<y.id?-1:1;});
+  var op='<option value="">選択してください</option>'+a.map(function(i){
+    return '<option value="'+i.id+'">'+i.id+'　['+esc(i.cat)+'] '+esc(i.name)+'　在庫'+stock(i)+'</option>';}).join('');
+  $('in-i').innerHTML=op;$('out-i').innerHTML=op;
+  $('iob').innerHTML=a.filter(function(i){return num(i.rented)>0;}).map(function(i){
+    return '<tr><td class="mut num" style="font-size:11px">'+esc(i.id)+'</td><td><b>'+esc(i.name)+'</b></td>'+
+    '<td><span class="tg t'+esc(i.cat)+'">'+esc(i.cat)+'</span></td>'+
+    '<td style="text-align:right" class="no num">'+i.rented+'</td>'+
+    '<td style="text-align:right" class="'+scls(i)+' num">'+slbl(i)+'</td></tr>';}).join('')
+    ||'<tr><td colspan="5" class="mut" style="padding:20px;text-align:center">貸出中の機材はありません</td></tr>';
+  $('ret-est').innerHTML='<option value="">案件を選択…</option>'+S.estimates.map(function(e){
+    return '<option value="'+e.id+'">'+esc(e.project)+(e.code?'（'+esc(e.code)+'）':'')+'　'+esc(e.date)+'</option>';}).join('');
+}
+function doIO(sg){
+  var p=sg>0?'out':'in',id=$(p+'-i').value,q=num($(p+'-q').value)||1,n=$(p+'-n').value;
+  if(!id){toast('機材を選択してください');return;}
+  stat('','登録中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.items=r.items;S.history=r.history;stat('ok','登録OK');$(p+'-n').value='';
+    renderIO();renderDash();renderHist();toast((sg>0?'出荷':'入荷')+'を登録しました');
+  }).applyMoves([{id:id,delta:sg*q}],n);
+}
+function doReturnEst(){
+  var id=$('ret-est').value;if(!id){toast('案件を選択してください');return;}
+  if(!confirm('この案件の機材をすべて返却登録します。よろしいですか？'))return;
+  stat('','処理中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.items=r.items;S.history=r.history;stat('ok','返却OK');
+    renderIO();renderDash();renderHist();toast('一括返却しました');
+  }).returnByEstimate(id);
+}
+
+/* ---- 明細追加：3モード ---- */
+function addMode(m){
+  amode=m;
+  ['sel','src','man'].forEach(function(k){
+    $('ad-'+k).classList.toggle('on',k===m);
+    $('pane-'+k).style.display=(k===m)?'block':'none';});
+}
+function fillCat(){
+  var cs=['映像','音響','照明','その他'];
+  $('s-cat').innerHTML=cs.map(function(c){return '<option>'+c+'</option>';}).join('');
+  fillHin();
+}
+function fillHin(){
+  var c=$('s-cat').value,seen={},list=[];
+  act().forEach(function(i){if(i.cat===c&&!seen[i.hinmoku]){seen[i.hinmoku]=1;list.push(i.hinmoku);}});
+  list.sort();
+  $('s-hin').innerHTML=list.map(function(h){return '<option>'+esc(h)+'</option>';}).join('');
+  fillItem();
+}
+function fillItem(){
+  var c=$('s-cat').value,h=$('s-hin').value;
+  var l=act().filter(function(i){return i.cat===c&&i.hinmoku===h;})
+    .sort(function(a,b){return a.id<b.id?-1:1;});
+  $('s-item').innerHTML=l.map(function(i){
+    return '<option value="'+i.id+'">'+i.id+'　'+esc(i.name)+'　在庫'+stock(i)+
+      '　'+(num(i.price)?yen(i.price)+'円/日':'単価未設定')+'</option>';}).join('');
+  var it=l[0];
+  $('s-hint').textContent=l.length?('この品目に '+l.length+' 件'):'該当する機材がありません';
+}
+function addFromSelect(){
+  var id=$('s-item').value;if(!id){toast('機材を選択してください');return;}
+  addLine(id,num($('s-qty').value)||1);
+}
+function estSearch(){
+  var q=($('eq').value||'').toLowerCase();
+  var r=q?act().filter(function(i){
+    return (i.id+' '+i.name+' '+i.hinmoku).toLowerCase().indexOf(q)>=0;}).slice(0,14):[];
+  $('eres').innerHTML=r.length?r.map(function(i){
+    return '<div class="res-i" onclick="addLine(\''+i.id+'\',num($(\'q-qty\').value)||1)">'+
+      '<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+
+      '<span class="mut num" style="font-size:11px;margin-right:7px">'+esc(i.id)+'</span>'+
+      '<span class="tg t'+esc(i.cat)+'">'+esc(i.cat)+'</span> '+esc(i.name)+
+      ' <span class="tg t'+esc(i.ptype)+'">'+esc(i.ptype)+'</span></span>'+
+      '<span style="flex-shrink:0;font-size:11px;color:var(--ink3);margin-left:10px" class="num">'+
+      (num(i.price)?yen(i.price)+'円/日':'<span class="no">単価未設定</span>')+
+      '　<span class="'+scls(i)+'">'+slbl(i)+'</span></span></div>';}).join(''):
+    '<p class="mut" style="padding:12px">'+(q?'該当なし':'ID・機材名・品目のいずれかで検索できます')+'</p>';
+}
+function addLine(id,qty){
+  var i=act().filter(function(x){return x.id===id;})[0];if(!i)return;
+  var grp=($('e-grp').value||'').trim();
+  var ex=lines.filter(function(l){return l.id===id&&l.grp===grp;})[0];
+  if(ex){ex.qty+=(qty||1);renderLines();toast(i.name+' の数量を +'+(qty||1)+' しました');return;}
+  var d=num($('e-days').value)||1;
+  lines.push({id:i.id,name:i.name,cat:i.cat,ptype:i.ptype,qty:(qty||1),unit:'台',days:d,
+    rate:rate(i.ptype,d),price:num(i.price),adjust:'',grp:grp,_k:lineSeq++});
+  renderLines();toast(i.name+' を明細に追加しました');
+}
+function addManual(){
+  var n=$('m-n').value.trim();if(!n){toast('品名を入力してください');return;}
+  var d=num($('e-days').value)||1,t=$('m-t').value,grp=($('e-grp').value||'').trim();
+  lines.push({id:null,name:n,cat:'',ptype:t,qty:num($('m-q').value)||1,unit:$('m-u').value||'式',
+    days:d,rate:rate(t,d),price:num($('m-p').value),adjust:'',grp:grp,_k:lineSeq++});
+  $('m-n').value='';$('m-u').value='';$('m-q').value=1;$('m-p').value=0;
+  renderLines();toast('明細に追加しました');
+}
+function calcDays(){
+  var a=$('e-in').value||$('e-hon').value, b=$('e-out').value||$('e-hon').value;
+  if(a&&b){var d=Math.round((new Date(b)-new Date(a))/86400000)+1;
+    if(d>0){$('e-days').value=d;applyDays();}}
+}
+function applyDays(){
+  var d=num($('e-days').value)||1;
+  lines.forEach(function(l){l.days=d;l.rate=rate(l.ptype,d);});
+  renderLines();
+}
+function groupOf(l){return l.grp||'';}
+function estGroups(){
+  var seen={},order=[];
+  plannedGroups.forEach(function(g){if(g&&!(g in seen)){seen[g]=1;order.push(g);}});
+  lines.forEach(function(l){var g=groupOf(l);if(!(g in seen)){seen[g]=1;order.push(g);}});
+  return order.map(function(g){return {name:g,items:lines.filter(function(l){return groupOf(l)===g;})};});
+}
+function existingGroupNames(){
+  var seen={},out=[];
+  lines.forEach(function(l){if(l.grp&&!seen[l.grp]){seen[l.grp]=1;out.push(l.grp);}});
+  return out;
+}
+function addPlannedGroup(){
+  var name=($('e-grp').value||'').trim();
+  if(!name){toast('グループ名を入力してください');return;}
+  if(plannedGroups.indexOf(name)<0)plannedGroups.push(name);
+  renderLines();
+  toast('「'+name+'」の枠を作成しました。続けて機材を追加するとここに入ります');
+}
+function removePlannedGroupAt(gi){
+  var grp=groupsCache[gi];if(!grp)return;
+  var idx=plannedGroups.indexOf(grp.name);
+  if(idx>=0)plannedGroups.splice(idx,1);
+  renderLines();
+}
+function groupSubtotal(name){
+  var sub=0;lines.forEach(function(l){if(groupOf(l)===name)sub+=amount(l);});
+  return sub;
+}
+function openFlat(gi){
+  var g=groupsCache[gi];if(!g)return;
+  flatGi=gi;
+  $('mf-name').value=g.name||'';
+  $('mf-amt').value=0;
+  $('mf-pct').value='';
+  $('mf-calc-preview').textContent='';
+  $('mf-calc-preview').style.display='none';
+  $('mf-calc').style.display='none';
+  $('mf-calc-icon').textContent='▸';
+  $('mf-calc-tgl').classList.remove('open');
+  var others=groupsCache.filter(function(x,idx){return idx!==gi&&x.name;});
+  var html=others.map(function(x){
+    return '<label class="ref-item">'+
+      '<input type="checkbox" class="cb mf-ref-cb" value="'+esc(x.name)+'" onchange="updateRefSum()">'+
+      '<span class="nm">'+esc(x.name)+'</span>'+
+      '<span class="amt">'+yenS(groupSubtotal(x.name))+'</span></label>';
+  }).join('');
+  $('mf-refgrp').innerHTML=html||'<div class="ref-empty">他にグループがありません</div>';
+  updateRefSum();
+  $('m-flat').classList.add('on');
+}
+function toggleFlatCalc(){
+  var v=$('mf-calc');
+  var open=v.style.display!=='none';
+  v.style.display=open?'none':'block';
+  $('mf-calc-icon').textContent=open?'▸':'▾';
+  $('mf-calc-tgl').classList.toggle('open',!open);
+}
+function checkedRefGroups(){
+  var boxes=document.querySelectorAll('#mf-refgrp .mf-ref-cb:checked');
+  return Array.prototype.map.call(boxes,function(b){return b.value;});
+}
+function updateRefSum(){
+  var boxes=document.querySelectorAll('#mf-refgrp .mf-ref-cb');
+  Array.prototype.forEach.call(boxes,function(b){
+    var item=b.closest('.ref-item');
+    if(item)item.classList.toggle('on',b.checked);
+  });
+  var names=checkedRefGroups();
+  var sum=names.reduce(function(s,n){return s+groupSubtotal(n);},0);
+  $('mf-ref-sum').textContent=names.length
+    ?'選択中（'+names.join('＋')+'）の合計：'+yenS(sum)
+    :'選択中の合計：¥0（基準にするグループにチェックを入れてください）';
+}
+function calcFlatFromPct(){
+  var names=checkedRefGroups();
+  if(!names.length){toast('基準にするグループを選択してください');return;}
+  var pct=num($('mf-pct').value);
+  if(!pct){toast('割合を入力してください（例：-10）');return;}
+  var base=names.reduce(function(s,n){return s+groupSubtotal(n);},0);
+  var amt=Math.round(base*pct/100);
+  $('mf-amt').value=amt;
+  var refLabel=names.length>1?(names.join('＋')+'の合計'):(names[0]+'の小計');
+  $('mf-calc-preview').style.display='block';
+  $('mf-calc-preview').textContent=refLabel+'（'+yenS(base)+'）の'+(pct>0?'+':'')+pct+'％ ＝ '+yenS(amt)+'　（下の「金額」欄に反映しました。必要であれば上書きできます）';
+}
+function doAddFlat(){
+  var g=groupsCache[flatGi];if(!g){cl('m-flat');return;}
+  var name=($('mf-name').value||'').trim();
+  if(!name){toast('費目名を入力してください');return;}
+  var amt=num($('mf-amt').value);
+  lines.push({id:null,name:name,cat:'',ptype:'C',qty:1,unit:'式',days:1,rate:1,price:amt,adjust:'',grp:g.name,_k:lineSeq++});
+  cl('m-flat');renderLines();toast('「'+name+'」を追加しました');
+}
+/* ---- 選択（範囲選択対応） ---- */
+function rowClick(e,k){
+  if(e.target.closest('input,button,a,select,textarea'))return;
+  toggleSel(k,e.shiftKey);
+}
+function toggleSel(k,shift){
+  if(shift&&lastSelK!=null&&renderOrder.indexOf(lastSelK)>=0&&renderOrder.indexOf(k)>=0){
+    var a=renderOrder.indexOf(lastSelK),b=renderOrder.indexOf(k);
+    var s=Math.min(a,b),e=Math.max(a,b);
+    for(var i=s;i<=e;i++)selKeys[renderOrder[i]]=true;
+  }else{
+    if(selKeys[k])delete selKeys[k];else selKeys[k]=true;
+    lastSelK=k;
+  }
+  renderLines();
+}
+function clearSel(){selKeys={};lastSelK=null;renderLines();}
+function selCount(){return Object.keys(selKeys).length;}
+function moveKeysToGroup(keys,name){
+  name=(name||'').trim();
+  lines.forEach(function(l){if(keys.indexOf(l._k)>=0)l.grp=name;});
+  selKeys={};lastSelK=null;renderLines();
+  toast((name?'「'+name+'」へ移動しました':'グループを解除しました'));
+}
+function moveSelectedToGroup(){
+  if(!selCount()){toast('明細を選択してください');return;}
+  var name=($('sel-grp-name').value||'').trim();
+  if(!name){toast('移動先のグループ名を入力してください');return;}
+  moveKeysToGroup(Object.keys(selKeys).map(Number),name);
+}
+function ungroupSelected(){
+  if(!selCount()){toast('明細を選択してください');return;}
+  moveKeysToGroup(Object.keys(selKeys).map(Number),'');
+}
+function applyPctToSelected(){
+  if(!selCount()){toast('明細を選択してください');return;}
+  var pct=num($('sel-pct').value);
+  if(!pct){toast('％を入力してください（例：-10）');return;}
+  var keys=Object.keys(selKeys).map(Number),n=0;
+  lines.forEach(function(l){
+    if(keys.indexOf(l._k)<0)return;
+    var raw=Math.round(l.qty*l.rate*l.price);
+    l.adjust=Math.round(raw*(1+pct/100));
+    n++;
+  });
+  renderLines();
+  toast(n+'件に'+(pct>0?'+':'')+pct+'％を適用しました（各明細の「調整後」欄に反映）');
+}
+/* ---- ドラッグ&ドロップ ---- */
+function dragStart(e,k){
+  dragKeys=(selKeys[k]&&selCount()>1)?Object.keys(selKeys).map(Number):[k];
+  e.dataTransfer.effectAllowed='move';
+  try{e.dataTransfer.setData('text/plain','lines');}catch(err){}
+}
+function allowDrop(e){e.preventDefault();e.dataTransfer.dropEffect='move';}
+function dropOnGroup(e,idx){
+  e.preventDefault();
+  if(!dragKeys.length)return;
+  var name=(idx==='')?'':(groupsCache[idx]?groupsCache[idx].name:'');
+  moveKeysToGroup(dragKeys,name);dragKeys=[];
+}
+function dropNewGroup(e){
+  e.preventDefault();
+  if(!dragKeys.length)return;
+  var name=prompt('新しいグループ名を入力してください');
+  if(name===null){dragKeys=[];return;}
+  moveKeysToGroup(dragKeys,name.trim());dragKeys=[];
+}
+function lineRowHtml(l,i){
+  var raw=Math.round(l.qty*l.rate*l.price),amt=amount(l),c=cap(l),ov=over(l);
+  var adj=(l.adjust!==''&&l.adjust!==null&&l.adjust!==undefined);
+  var sel=!!selKeys[l._k];
+  var rateDisp=(l.ptype==='C')?'—':l.rate;
+  return '<div class="rowline'+(ov?' alert':'')+(sel?' selrow':'')+'" draggable="true" '+
+    'ondragstart="dragStart(event,'+l._k+')" onclick="rowClick(event,'+l._k+')">'+
+    '<span class="drg" title="ドラッグしてグループを変更">⠿</span>'+
+    '<input type="checkbox" class="selchk" '+(sel?'checked':'')+' onclick="event.stopPropagation();toggleSel('+l._k+',event.shiftKey)" onchange="event.stopPropagation()">'+
+    '<span style="width:22px;font-size:10.5px;color:var(--ink3)" class="num">'+(i+1)+'</span>'+
+    '<span style="flex:1;min-width:0">'+
+      '<input class="ci" style="width:100%;text-align:left;font-weight:600" value="'+esc(l.name)+'" '+
+        'onchange="upd('+i+',\'name\',this.value)" title="クリックして品名を修正できます">'+
+      (l.id?'<div class="mut num" style="font-size:10px;margin-top:2px">'+esc(l.id)+'</div>':'')+
+      (ov?'<div style="font-size:10.5px;color:var(--wrn)">原価上限 '+yen(c)+'円 を超過　'+
+        '<a href="#" onclick="applyCap('+i+');return false;" style="color:var(--brand)">上限を適用</a></div>':'')+'</span>'+
+    '<span style="width:44px">'+
+      '<select class="ci tg t'+esc(l.ptype)+'" style="width:100%;padding:0 2px;text-align:center" '+
+        'onchange="upd('+i+',\'ptype\',this.value)">'+
+        ['A','B','C'].map(function(t){return '<option value="'+t+'"'+(l.ptype===t?' selected':'')+'>'+t+'</option>';}).join('')+
+      '</select></span>'+
+    '<span style="width:52px"><input class="ci num" type="number" min="1" value="'+l.qty+'" onchange="upd('+i+',\'qty\',this.value)"></span>'+
+    '<span style="width:52px"><input class="ci" value="'+esc(l.unit)+'" onchange="upd('+i+',\'unit\',this.value)"></span>'+
+    '<span style="width:52px"><input class="ci num" type="number" min="1" max="62" value="'+l.days+'" onchange="upd('+i+',\'days\',this.value)"></span>'+
+    '<span style="width:46px;text-align:center;font-size:11.5px;font-weight:700;color:var(--brand)" class="num">'+rateDisp+'</span>'+
+    '<span style="width:82px"><input class="ci num" style="text-align:right" type="number" value="'+l.price+'" onchange="upd('+i+',\'price\',this.value)"></span>'+
+    '<span style="width:92px;text-align:right;font-size:12px'+(adj?';text-decoration:line-through;color:var(--ink3)':';font-weight:700')+'" class="num">'+yen(raw)+'</span>'+
+    '<span style="width:92px"><input class="ci num" style="text-align:right'+(adj?';font-weight:700;border-color:var(--brand)':'')+
+      '" type="number" placeholder="—" value="'+(adj?l.adjust:'')+'" onchange="upd('+i+',\'adjust\',this.value)" title="特殊裁定：金額を直接指定"></span>'+
+    '<button class="x" style="width:24px;font-size:15px" onclick="event.stopPropagation();rm('+i+')">×</button></div>';
+}
+function renderLines(){
+  $('e-cnt').textContent=lines.length?(lines.length+'件'):'';
+  if(!lines.length&&!plannedGroups.length){$('elines').innerHTML=
+    '<p class="mut" style="padding:22px 0;text-align:center">明細がありません。上の「選択して追加」から機材を追加するか、「グループだけ先に作る」で枠を用意できます。</p>';
+    $('esum').innerHTML='';$('freeeprev').innerHTML='';$('seltool').innerHTML='';renderOrder=[];
+    $('grplist').innerHTML=plannedGroups.map(function(g){return '<option value="'+esc(g)+'">';}).join('');
+    return;}
+  var groups=estGroups();
+  groupsCache=groups;
+  var html='',order=[];
+  groups.forEach(function(grp,gi){
+    if(grp.name){
+      var gsub=0;grp.items.forEach(function(l){gsub+=amount(l);});
+      var isEmpty=grp.items.length===0;
+      html+='<div class="grphead" ondragover="allowDrop(event)" ondrop="dropOnGroup(event,'+gi+')" style="'+(gi===0?'':'border-top:1px solid var(--line);')+'">'+
+        '<b style="font-size:12.5px">■ '+esc(grp.name)+'</b>'+
+        '<span class="mut" style="font-size:11px">小計 <span class="num">'+yen(gsub)+'</span>円</span>'+
+        '<button class="btn s" style="font-size:10.5px;padding:3px 8px'+(isEmpty?'':';margin-left:8px')+
+          '" onclick="openFlat('+gi+')">＋金額を直接入力</button>'+
+        (isEmpty?'<span class="mut" style="font-size:10.5px">（空の枠）</span>'+
+          '<button class="x" style="font-size:12px;margin-left:auto" title="この枠を削除" '+
+          'onclick="removePlannedGroupAt('+gi+')">×</button>':'')+
+        '</div>';
+    }else if(groups.length>1){
+      html+='<div class="grphead" ondragover="allowDrop(event)" ondrop="dropOnGroup(event,\'\')" style="'+(gi===0?'':'border-top:1px solid var(--line);')+'">'+
+        '<span class="mut" style="font-size:11px">（グループ未設定）</span></div>';
+    }
+    grp.items.forEach(function(l){
+      var i=lines.indexOf(l);
+      order.push(l._k);
+      html+=lineRowHtml(l,i);
+    });
+  });
+  renderOrder=order;
+  html+='<div class="grphead newgrp" ondragover="allowDrop(event)" ondrop="dropNewGroup(event)">'+
+    '<span class="mut" style="font-size:11px">＋ ここにドラッグして新しいグループを作成</span></div>';
+  $('elines').innerHTML=html;
+  $('grplist').innerHTML=existingGroupNames().concat(plannedGroups)
+    .filter(function(g,idx,arr){return g&&arr.indexOf(g)===idx;})
+    .map(function(g){return '<option value="'+esc(g)+'">';}).join('');
+
+  var sc=selCount();
+  $('seltool').innerHTML=sc?(
+    '<div class="seltoolbar"><b class="num">'+sc+'</b>件選択中　'+
+    '<input id="sel-grp-name" list="grplist" placeholder="移動先のグループ名" style="width:220px"> '+
+    '<button class="btn s p" onclick="moveSelectedToGroup()">このグループへ移動</button> '+
+    '<button class="btn s" onclick="ungroupSelected()">グループ解除</button> '+
+    '<span style="display:inline-block;width:1px;height:16px;background:var(--line);margin:0 6px;vertical-align:middle"></span>'+
+    '<input id="sel-pct" type="number" placeholder="例：-10" class="num" style="width:76px" title="マイナスで割引、プラスで上乗せ"> ％ '+
+    '<button class="btn s" onclick="applyPctToSelected()" title="選択した明細それぞれの単価×数量×掛け率に対して、指定した％を適用します">割引/上乗せを適用</button> '+
+    '<button class="btn s" onclick="clearSel()">選択解除</button></div>'
+  ):'';
+
+  var sub=0;lines.forEach(function(l){sub+=amount(l);});
+  var tx=Math.round(sub*(num(S.cfg.tax)||10)/100);
+  var ovc=lines.filter(over).length;
+  $('esum').innerHTML=(ovc?'<div class="warn" style="margin-top:10px">原価上限を超えている明細が '+ovc+
+      ' 件あります。長期レンタルの特殊裁定をご検討ください。</div>':'')+
+    '<div style="border-top:2px solid var(--line);margin-top:10px;padding-top:12px;'+
+    'display:flex;justify-content:flex-end"><table style="width:290px">'+
+    '<tr><td class="mut">小計</td><td style="text-align:right" class="num">'+yen(sub)+' 円</td></tr>'+
+    '<tr><td class="mut">消費税（'+(num(S.cfg.tax)||10)+'%）</td><td style="text-align:right" class="num">'+yen(tx)+' 円</td></tr>'+
+    '<tr><td style="font-weight:700;font-size:14px">合計</td>'+
+    '<td style="text-align:right;font-weight:700;font-size:16px;color:var(--brand)" class="num">'+yen(sub+tx)+' 円</td></tr>'+
+    '</table></div>';
+  renderFreeePreview();
+}
+function upd(i,f,v){
+  if(f==='days'){var d=Math.max(1,Math.min(62,num(v)||1));lines[i].days=d;lines[i].rate=rate(lines[i].ptype,d);}
+  else if(f==='qty')lines[i].qty=Math.max(1,num(v)||1);
+  else if(f==='price')lines[i].price=num(v);
+  else if(f==='adjust')lines[i].adjust=(v===''||v===null)?'':num(v);
+  else if(f==='name'){var nn=(v||'').trim();if(!nn){toast('品名は空にできません');renderLines();return;}lines[i].name=nn;}
+  else if(f==='ptype'){lines[i].ptype=v;lines[i].rate=rate(v,lines[i].days);}
+  else if(f==='unit')lines[i].unit=v;
+  renderLines();
+}
+function applyCap(i){lines[i].adjust=cap(lines[i]);renderLines();toast('上限額を適用しました');}
+function rm(i){var k=lines[i]&&lines[i]._k;lines.splice(i,1);if(k!=null)delete selKeys[k];renderLines();}
+function clearEst(){if((lines.length||plannedGroups.length)&&!confirm('明細をすべて消去しますか？'))return;
+  lines=[];selKeys={};lastSelK=null;dragKeys=[];renderOrder=[];groupsCache=[];plannedGroups=[];$('e-grp').value='';renderLines();}
+
+/* ---- 見積の修正モード ---- */
+function loadEstimateForEdit(id){
+  var e=S.estimates.filter(function(x){return x.id===id;})[0];
+  if(!e){toast('見積が見つかりません');return;}
+  if(e.locked&&e.locked!==S.user&&!S.isAdmin){
+    toast('「'+e.locked+'」がロック中のため編集できません。複製してから編集してください');return;
+  }
+  if((lines.length||plannedGroups.length)&&!confirm('編集中の内容が消えます。よろしいですか？'))return;
+  editingEstId=id;
+  $('e-code').value=e.code||'';
+  $('e-proj').value=e.project||'';
+  $('e-person').value=e.person||'';
+  $('e-place').value=e.place||'';
+  $('e-pay').value=e.pay||'別途打合せ';
+  $('e-hon').value=e.honban||'';
+  $('e-in').value=e.hannyuu||'';
+  $('e-out').value=e.hanshutsu||'';
+  $('e-biko').value=e.biko||'';
+  lines=(e.lines||[]).map(function(l){
+    var nl={}; for(var k in l){ if(k!=='_k') nl[k]=l[k]; }
+    nl._k=lineSeq++;
+    if(nl.grp===undefined||nl.grp===null)nl.grp='';
+    if(nl.adjust===undefined||nl.adjust===null)nl.adjust='';
+    return nl;
+  });
+  $('e-days').value=(lines[0]&&lines[0].days)||1;
+  selKeys={};lastSelK=null;dragKeys=[];groupsCache=[];plannedGroups=[];
+  $('e-grp').value='';
+  renderEditBanner();
+  renderLines();
+  go('est');
+  window.scrollTo(0,0);
+  toast('「'+e.project+'」を編集モードで読み込みました');
+}
+function exitEditMode(){
+  editingEstId=null;
+  lines=[];selKeys={};lastSelK=null;dragKeys=[];renderOrder=[];groupsCache=[];plannedGroups=[];
+  $('e-grp').value='';
+  $('e-code').value='';$('e-proj').value='';$('e-person').value='';$('e-place').value='';
+  $('e-pay').value='別途打合せ';$('e-hon').value='';$('e-in').value='';$('e-out').value='';
+  $('e-biko').value='';$('e-days').value='1';
+  renderEditBanner();
+  renderLines();
+  toast('新規作成に戻りました');
+}
+function renderEditBanner(){
+  var b=$('editbanner');if(!b)return;
+  var btn=$('btn-saveest');
+  if(!editingEstId){b.innerHTML='';if(btn)btn.textContent='見積を保存';return;}
+  var e=S.estimates.filter(function(x){return x.id===editingEstId;})[0];
+  if(btn)btn.textContent='修正を保存';
+  b.innerHTML='<div class="warn" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">'+
+    '<span>「<b>'+esc(e?e.project:'（見積）')+'</b>」を編集中です。保存すると元の内容が上書きされます（出荷登録は行われません）。</span>'+
+    '<button class="btn s" onclick="exitEditMode()">編集を終了（新規作成に戻す）</button></div>';
+}
+
+/* ---- freee連携用：グループ小計のみ抽出 ---- */
+var freeeRowsCache=[];
+function freeeRows(){
+  return estGroups().filter(function(g){return g.name&&g.items.length;}).map(function(g){
+    var sub=0;g.items.forEach(function(l){sub+=amount(l);});
+    return {name:g.name,qty:1,unit:'式',price:sub};
+  });
+}
+function copyText(v,label){
+  var ta=document.createElement('textarea');ta.value=String(v);ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast((label?label+'「'+v+'」を':'')+'コピーしました');}
+  catch(e){toast('コピーに失敗しました');}
+  document.body.removeChild(ta);
+}
+function copyFreeeField(idx,field){
+  var r=freeeRowsCache[idx];if(!r)return;
+  copyText(r[field],{name:'品名',qty:'数量',price:'単価'}[field]);
+}
+function renderFreeePreview(){
+  var rows=freeeRows();freeeRowsCache=rows;
+  if(!rows.length){$('freeeprev').innerHTML=
+    '<p class="mut" style="padding:10px 0">グループ名を付けた明細がまだありません。「現在のグループ」に名前を入れて機材を追加するか、下の見積明細で行を選んでグループへ移動してください。</p>';return;}
+  var h='';
+  rows.forEach(function(r,idx){
+    h+='<div class="frow"><span class="mut num" style="width:16px;flex-shrink:0">'+(idx+1)+'</span>'+
+      '<span class="fval" style="flex:2;min-width:0" title="'+esc(r.name)+'">'+
+        '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(r.name)+'</span>'+
+        '<button onclick="copyFreeeField('+idx+',\'name\')">品名コピー</button></span>'+
+      '<span class="fval"><span class="num">'+r.qty+'</span>'+
+        '<button onclick="copyFreeeField('+idx+',\'qty\')">数量コピー</button></span>'+
+      '<span class="fval"><span class="num">'+yen(r.price)+'</span>'+
+        '<button onclick="copyFreeeField('+idx+',\'price\')">単価コピー</button></span></div>';
+  });
+  $('freeeprev').innerHTML=h;
+}
+function csvFreee(){
+  var rows=freeeRows();
+  if(!rows.length){toast('グループ名を付けた明細がありません');return;}
+  var c='品名,数量,単位,単価\r\n';
+  rows.forEach(function(r){c+=[qq(r.name),r.qty,qq(r.unit),r.price].join(',')+'\r\n';});
+  dl('freee連携用_'+($('e-proj').value||'見積')+'_'+td()+'.csv',c);
+}
+
+function estObj(){
+  var sub=0;lines.forEach(function(l){sub+=amount(l);});
+  var tx=Math.round(sub*(num(S.cfg.tax)||10)/100);
+  return {code:$('e-code').value,project:$('e-proj').value||'無題の案件',person:$('e-person').value,
+    place:$('e-place').value,pay:$('e-pay').value,honban:$('e-hon').value,hannyuu:$('e-in').value,
+    hanshutsu:$('e-out').value,biko:$('e-biko').value,days:num($('e-days').value)||1,
+    lines:lines,subtotal:sub,tax:tx,total:sub+tx};
+}
+function saveEst(){
+  if(!lines.length){toast('明細を追加してください');return;}
+  var e=estObj();stat('','保存中…');
+  if(editingEstId){
+    google.script.run.withSuccessHandler(function(r){
+      if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+      S.estimates=r.estimates;S.history=r.history;stat('ok','更新OK');
+      renderHist();renderEditBanner();renderIO();toast('見積を更新しました');
+    }).updateEstimate(editingEstId,e);
+    return;
+  }
+  google.script.run.withSuccessHandler(function(r){
+    S.estimates=r.estimates;S.history=r.history;stat('ok','保存OK');
+    renderHist();renderIO();toast('見積を保存しました');
+    pend=e;$('io-proj').textContent=e.project;
+    var h=e.lines.filter(function(l){return l.id;});
+    $('io-prev').innerHTML=h.length?h.map(function(l){
+      return '<div style="padding:4px 0;border-bottom:1px solid var(--line2)">'+
+        '<span class="mut num" style="font-size:10.5px;margin-right:8px">'+esc(l.id)+'</span>'+
+        esc(l.name)+' <b class="num">×'+l.qty+'</b></div>';}).join(''):
+      '<p class="mut">在庫管理対象の機材がありません（手入力のみ）</p>';
+    $('m-io').classList.add('on');
+  }).saveEstimate(e);
+}
+function confirmIO(y){
+  cl('m-io');
+  if(!y||!pend){pend=null;return;}
+  var mv=pend.lines.filter(function(l){return l.id;}).map(function(l){return {id:l.id,delta:num(l.qty)};});
+  if(!mv.length){pend=null;return;}
+  var nm='見積「'+pend.project+'」';stat('','出荷登録中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));pend=null;return;}
+    S.items=r.items;S.history=r.history;stat('ok','登録OK');
+    renderIO();renderDash();renderHist();toast('出荷登録しました');pend=null;
+  }).applyMoves(mv,nm);
+}
+
+/* ---- CSV ---- */
+function dl(n,c){stat('','出力中…');
+  google.script.run.withSuccessHandler(function(u){stat('ok','出力OK');window.open(u,'_blank');
+    toast('マイドライブ「機材管理_出力」に保存しました');}).exportCsv(n,c);}
+function qq(s){return '"'+String(s==null?'':s).replace(/"/g,'""')+'"';}
+function td(){var d=new Date();return d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2);}
+function csvItems(){
+  var c='ID,カテゴリ,品目,機材名,数量,貸出中,在庫,単価,原価,料金タイプ,公開備考,社内備考\r\n';
+  act().forEach(function(i){c+=[i.id,i.cat,qq(i.hinmoku),qq(i.name),i.total,i.rented,stock(i),
+    i.price,i.cost,i.ptype,qq(i.pub),qq(i.naibu)].join(',')+'\r\n';});
+  dl('機材リスト_'+td()+'.csv',c);
+}
+function csvEst(){
+  if(!lines.length){toast('明細がありません');return;}
+  var e=estObj();
+  var c='明細書\r\n見積番号,'+qq(e.code)+'\r\n\r\n';
+  c+='No,品名,数量,単位,掛率,単価,金額\r\n';
+  var no=0,groups=estGroups().filter(function(g){return g.items.length;});
+  groups.forEach(function(g){
+    if(g.name){no++;c+=[no,qq('■ '+g.name),'','','','',''].join(',')+'\r\n';}
+    g.items.forEach(function(l){no++;
+      c+=[no,qq(l.name),l.qty,qq(l.unit),(l.ptype==='C'?'—':l.rate),l.price,amount(l)].join(',')+'\r\n';});
+    if(g.name){
+      var gsub=0;g.items.forEach(function(l){gsub+=amount(l);});
+      no++;c+=[no,'','','','','小計',gsub].join(',')+'\r\n';
+    }
+  });
+  c+='\r\n◼︎明細1,見積番号,'+qq(e.code)+'\r\n';
+  dl('見積_'+(e.project||'無題')+'_'+td()+'.csv',c);
+}
+
+/* ---- 見積書（明細書／freeeのP1と対になる書式） ---- */
+function preview(){
+  if(!lines.length){toast('明細がありません');return;}
+  var e=estObj(),groups=estGroups().filter(function(g){return g.items.length;}),no=0,body='';
+  groups.forEach(function(g){
+    body+='<tbody class="grp">';
+    if(g.name){
+      no++;
+      body+='<tr><td class="num">'+no+'</td><td colspan="5"><b>■ '+esc(g.name)+'</b></td></tr>';
+    }
+    g.items.forEach(function(l){
+      no++;
+      body+='<tr><td class="num">'+no+'</td><td>'+esc(l.name)+'</td>'+
+        '<td style="text-align:center" class="num">'+l.qty+'</td><td style="text-align:center">'+esc(l.unit)+'</td>'+
+        '<td style="text-align:center" class="num">'+(l.ptype==='C'?'—':l.rate)+'</td>'+
+        '<td style="text-align:right" class="num">'+yenS(l.price)+'</td>'+
+        '<td style="text-align:right" class="num">'+yenS(amount(l))+'</td></tr>';
+    });
+    if(g.name){
+      var gsub=0;g.items.forEach(function(l){gsub+=amount(l);});
+      no++;
+      body+='<tr><td class="num">'+no+'</td><td colspan="5" style="text-align:right"><b>小計</b></td>'+
+        '<td style="text-align:right" class="num"><b>'+yenS(gsub)+'</b></td></tr>';
+    }
+    body+='</tbody>';
+  });
+  var infoLabel='見積番号：'+esc(e.code||'—')+'　案件名：'+esc(e.project||'—');
+  var h='<table><thead>'+
+    '<tr><th class="info" colspan="7">'+infoLabel+'</th></tr>'+
+    '<tr><th>No</th><th>品名</th><th>数量</th><th>単位</th><th>掛率</th><th>単価</th><th>金額</th></tr>'+
+    '</thead>'+body+'</table>'+
+    (e.biko?'<div style="margin-top:12px;font-size:10px"><b>備考：</b>'+esc(e.biko)+'</div>':'')+
+    '<div class="co">◼︎明細1　見積番号：'+esc(e.code||'—')+'</div>';
+  $('docbody').innerHTML=h;
+  $('printArea').innerHTML='<div class="doc" style="padding:16px">'+h+'</div>';
+  $('m-doc').classList.add('on');
+}
+
+/* ---- 履歴 ---- */
+function hf(f,b){hfil=f;
+  var t=b.parentNode.querySelectorAll('button');
+  for(var i=0;i<t.length;i++)t[i].classList.remove('on');
+  b.classList.add('on');renderHist();}
+function estCardHtml(e){
+  var isOwner=(e.user===S.user), canManage=(isOwner||S.isAdmin);
+  var isLocked=!!e.locked, lockedByMe=(e.locked===S.user);
+  var canEdit=!isLocked||isOwner||S.isAdmin;
+  var ownerTag=isOwner
+    ?'<span class="tg tA" style="font-size:10px">自分の見積</span>'
+    :'<span class="mut" style="font-size:10.5px">'+esc(e.user||'不明')+'</span>';
+  var lockTag=isLocked
+    ?'<span class="tg" style="font-size:10px;background:var(--wrn-soft);color:var(--wrn)">🔒 ロック中'+
+      (lockedByMe?'（自分）':e.locked?'（'+esc(e.locked)+'）':'')+'</span>'
+    :'';
+  var btns='<button class="btn s" onclick="dupEstimate(\''+e.id+'\')">複製</button>';
+  if(canEdit)btns+='<button class="btn s" onclick="loadEstimateForEdit(\''+e.id+'\')">編集</button>';
+  if(canManage){
+    btns+='<button class="btn s" onclick="toggleLockUi(\''+e.id+'\','+(isLocked?'false':'true')+')">'+(isLocked?'ロック解除':'ロック')+'</button>';
+    btns+='<button class="btn s d" onclick="deleteEstimateUi(\''+e.id+'\')">削除</button>';
+  }
+  return '<div style="border:1px solid var(--line);border-radius:7px;padding:12px 14px;margin-bottom:8px'+
+    (isLocked?';background:#FFFDF5':'')+'">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">'+
+    '<div style="min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
+    '<b>'+esc(e.project)+'</b>'+
+    (e.code?'<span class="mut num" style="font-size:10.5px">'+esc(e.code)+'</span>':'')+
+    ownerTag+lockTag+'</div>'+
+    '<div style="font-size:11px;color:var(--ink3);margin-top:3px">'+esc(e.person||'')+'　'+esc(e.honban||'')+
+    '　作成 '+esc(e.date)+
+    (e.updated?'　<span style="color:var(--wrn)">最終更新 '+esc(e.updated)+(e.updatedBy?'（'+esc(e.updatedBy)+'）':'')+'</span>':'')+
+    '</div></div>'+
+    '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap">'+
+    '<div style="font-size:16px;font-weight:700;color:var(--brand);white-space:nowrap" class="num">¥'+yen(e.total)+'</div>'+
+    btns+'</div></div>'+
+    '<div style="font-size:11px;color:var(--ink3);margin-top:6px">'+
+    e.lines.slice(0,6).map(function(l){return esc(l.name)+'×'+l.qty;}).join('、')+
+    (e.lines.length>6?'　他'+(e.lines.length-6)+'件':'')+'</div></div>';
+}
+function renderHist(){
+  var h=hfil==='all'?S.history:S.history.filter(function(x){return x.type===hfil;});
+  $('hlist').innerHTML=h.slice(0,80).map(ev).join('')||'<p class="mut" style="padding:8px 0">履歴がありません</p>';
+
+  var q=($('hist-est-q')?$('hist-est-q').value:'').toLowerCase().trim();
+  var onlyMine=$('hist-est-mine')&&$('hist-est-mine').checked;
+  var list=S.estimates.filter(function(e){
+    if(onlyMine&&e.user!==S.user)return false;
+    if(q&&(e.project+' '+(e.code||'')+' '+(e.person||'')+' '+(e.user||'')).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  $('hist-est-cnt').textContent=list.length+' / '+S.estimates.length+'件';
+  $('ests').innerHTML=list.length?list.map(estCardHtml).join('')
+    :'<p class="mut">'+(S.estimates.length?'該当する見積がありません':'保存済みの見積はありません')+'</p>';
+}
+function histEstFilter(){renderHist();}
+function dupEstimate(id){
+  if(!confirm('この見積を複製します。よろしいですか？'))return;
+  stat('','複製中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.estimates=r.estimates;S.history=r.history;stat('ok','複製OK');
+    renderHist();toast('複製しました。編集ボタンから続きを作成できます');
+  }).duplicateEstimate(id);
+}
+function deleteEstimateUi(id){
+  var e=S.estimates.filter(function(x){return x.id===id;})[0];
+  if(!confirm('「'+(e?e.project:'この見積')+'」を削除します。この操作は取り消せません。よろしいですか？'))return;
+  stat('','削除中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.estimates=r.estimates;S.history=r.history;stat('ok','削除OK');
+    if(editingEstId===id)exitEditMode();
+    renderHist();toast('削除しました');
+  }).deleteEstimate(id);
+}
+function toggleLockUi(id,wantLock){
+  stat('','処理中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.estimates=r.estimates;stat('ok','OK');
+    renderHist();renderEditBanner();toast(wantLock?'ロックしました':'ロックを解除しました');
+  }).setEstimateLock(id,wantLock);
+}
+
+/* ---- 設定 ---- */
+function renderSet(){
+  ['company','address','tel','fax','tax','threshold','pageSize','admins','rateCap','costRatio']
+    .forEach(function(k){var el=$('c-'+k);if(el){el.value=S.cfg[k]||'';el.disabled=!S.isAdmin;}});
+  var h='';
+  for(var d=0;d<=62;d++){
+    var v=(S.rates[String(d)]===undefined?DEF[d]:S.rates[String(d)]);
+    h+='<div class="ri"><label>'+(d===0?'設営日':d+'日')+'</label>'+
+      '<input type="number" class="num" step="0.05" min="0" id="r-'+d+'" value="'+v+'"'+(S.isAdmin?'':' disabled')+'></div>';}
+  $('rg').innerHTML=h;
+}
+function doSaveRates(){
+  var o={};for(var d=0;d<=62;d++)o[d]=num($('r-'+d).value);
+  stat('','保存中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.rates=r.rates;stat('ok','保存OK');toast('掛け率を保存しました');applyDays();
+  }).saveRates(o);
+}
+function resetRates(){for(var d=0;d<=62;d++)$('r-'+d).value=DEF[d];toast('初期値を入力しました。保存を押してください');}
+function doSaveCfg(){
+  var o={};['company','address','tel','fax','tax','threshold','pageSize','admins','rateCap','costRatio']
+    .forEach(function(k){o[k]=$('c-'+k).value;});
+  stat('','保存中…');
+  google.script.run.withSuccessHandler(function(r){
+    if(!r.ok){stat('er','失敗');toast(r.errors.join(' / '));return;}
+    S.cfg=r.cfg;stat('ok','保存OK');toast('設定を保存しました');renderAll();
+  }).saveConfig(o);
+}
+</script></body></html>
