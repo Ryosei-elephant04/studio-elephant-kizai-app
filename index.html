@@ -579,6 +579,38 @@ function amount(l){
 }
 function over(l){var c=cap(l);return c>0&&amount(l)>c;}
 
+/* ---- GAS通信シム（GitHub Pages分離版） ----
+   このアプリはもうGoogle Apps Scriptからは配信されないため、本来のgoogle.script.runは
+   存在しない。同じ書き方(google.script.run.withSuccessHandler(...).関数名(引数))のまま
+   動くように、fetch()でGASのWebアプリURLを直接呼び出す互換シムをここで用意する。 */
+var GAS_URL='https://script.google.com/macros/s/AKfycbz_2pqCTLx2rlM1ASGri0AYIsH_RIZ0LpQ_4tAYpunFXhFfTp9VmO7veMcz5XAx6eZq/exec';
+var GAS_ACTIONS_=['getBootstrap','manualSync','savePricing','applyMoves','returnByEstimate',
+  'updateEstimate','saveEstimate','duplicateEstimate','deleteEstimate','setEstimateLock',
+  'saveRates','saveConfig','exportCsv'];
+function GasRun_(){}
+GasRun_.prototype.withSuccessHandler=function(fn){this._s=fn;return this;};
+GasRun_.prototype.withFailureHandler=function(fn){this._f=fn;return this;};
+GAS_ACTIONS_.forEach(function(name){
+  GasRun_.prototype[name]=function(){
+    var args=Array.prototype.slice.call(arguments),self=this;
+    var isRead=(name==='getBootstrap');
+    var url=isRead?(GAS_URL+'?action='+encodeURIComponent(name)):GAS_URL;
+    var opt=isRead?{method:'GET'}:{method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:name,args:args})};
+    fetch(url,opt).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(function(res){
+      if(res&&typeof res==='object'&&res.__error)throw new Error(res.__error);
+      if(self._s)self._s(res);
+    }).catch(function(e){
+      if(self._f)self._f(e);else console.error(name+' 失敗:',e);
+    });
+  };
+});
+var google={script:{get run(){return new GasRun_();}}};
+
 /* ---- 起動 ---- */
 google.script.run.withSuccessHandler(boot).withFailureHandler(function(e){
   stat('er','接続エラー');
